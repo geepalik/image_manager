@@ -16,4 +16,6 @@ router.post('/upload_image',imagesController.uploadImage);
 //PUT /images/replace_image
 router.put('/update_image',imagesController.replaceImage);
 
+router.delete('/delete_image',imagesController.deleteImage);
+
 module.exports = router;

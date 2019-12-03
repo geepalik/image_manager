@@ -23,8 +23,15 @@ module.exports = class Image {
     }
 
     static findById(imageId){
-        return db.query(
+        return db.execute(
             'SELECT * FROM images WHERE id = ?',
+            [imageId]
+        );
+    }
+
+    static deleteById(imageId){
+        return db.execute(
+            'DELETE FROM images WHERE id = ?',
             [imageId]
         );
     }

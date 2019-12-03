@@ -71,7 +71,7 @@ exports.replaceImage = (req, res, next) => {
         const newImage = new Image(imageId,imageName,imageGroup,imageUrl);
         return newImage.update();
     })
-    .then(updateResult => {
+    .then(() => {
         res.status(200).json({message: 'Image updated!'});
     })
     .catch(err => {
@@ -100,10 +100,35 @@ exports.uploadImage = (req, res, next) => {
     image
     .save().
     then(result => {
+        image.id = result[0].insertId;
         res.status(201).json({
             message: 'OK!',
             image: image,
         });
+    })
+    .catch(err => {
+        if(!err.statusCode){
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
+
+exports.deleteImage = (req, res, next) => {
+    const imageId = req.body.image_id;
+    console.log(imageId);
+    Image.findById(imageId)
+    .then(imageData => {  
+        if(!imageData){
+            const error = new Error('Could not find image');
+            error.statusCode = 404;
+            throw error;
+        }
+        clearImage(imageData[0][0].image_file);
+        return Image.deleteById(imageId);
+    })
+    .then(() =>{
+        res.status(200).json({message: 'Image deleted!'});
     })
     .catch(err => {
         if(!err.statusCode){
