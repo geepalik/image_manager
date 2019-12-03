@@ -17,14 +17,15 @@ module.exports = class Image {
 
     update(){
         return db.execute(
-            'UPDATE images SET image_name'
+            'UPDATE images SET image_name = ?, image_group = ?, image_file = ? WHERE id = ?',
+            [this.imageName, this.imageGroup, this.imageFile, this.id]
         )
     }
 
-    static findByName(imageName){
-        return db.execute(
-            'SELECT * FROM images WHERE image_name = ?',
-            [imageName]
+    static findById(imageId){
+        return db.query(
+            'SELECT * FROM images WHERE id = ?',
+            [imageId]
         );
     }
 

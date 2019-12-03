@@ -14,6 +14,6 @@ router.get('/get_image_data',imagesController.getImageData);
 router.post('/upload_image',imagesController.uploadImage);
 
 //PUT /images/replace_image
-router.put('/replace_image',imagesController.replaceImage);
+router.put('/update_image',imagesController.replaceImage);
 
 module.exports = router;
