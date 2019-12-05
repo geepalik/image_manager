@@ -47,6 +47,17 @@ app.use(
 
 app.use('/images',express.static(path.join(__dirname,'images')));
 
+app.use((req, res, next) => {
+    //allow access from every, elminate CORS
+    res.setHeader('Access-Control-Allow-Origin','*');
+    //set the allowed HTTP methods to be requested
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, PATCH, DELETE');
+    //headers clients can use in their requests
+    res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
+    //allow request to continue and be handled by routes
+    next();
+});
+
 app.use('/image_service',imagesRoutes);
 
 app.listen(8080);

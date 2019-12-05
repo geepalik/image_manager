@@ -115,17 +115,16 @@ exports.uploadImage = (req, res, next) => {
 };
 
 exports.deleteImage = (req, res, next) => {
-    const imageId = req.body.image_id;
-    console.log(imageId);
+    const imageId = req.params.imageId;
     Image.findById(imageId)
     .then(imageData => {  
-        if(!imageData){
+        if(imageData[0].length === 0){
             const error = new Error('Could not find image');
             error.statusCode = 404;
             throw error;
         }
         clearImage(imageData[0][0].image_file);
-        return Image.deleteById(imageId);
+        return Image.deleteById(imageId);    
     })
     .then(() =>{
         res.status(200).json({message: 'Image deleted!'});
@@ -134,7 +133,7 @@ exports.deleteImage = (req, res, next) => {
         if(!err.statusCode){
             err.statusCode = 500;
         }
-        next(err);
+        res.status(err.statusCode).json({status: 'error',message: err.message });
     });
 };
 
