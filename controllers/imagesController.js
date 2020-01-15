@@ -2,35 +2,38 @@ const fs = require('fs');
 const path = require('path');
 const Image = require('../models/imageModel');
 
-exports.getImages = (req, res, next) => {
-    Image
-    .fetchAll()
-    .then(images => {
-        res
-        .status(200)
-        .json({message: 'Fetch images ok', images: images[0]});
-    })
-    .catch(err => {
-        if(!err.statusCode){
-            err.statusCode = 500;
-        }
-        next(err);
-    })
-};
+exports.getImage = (req, res, next) => {
+    const imageId = req.params.imageId;
+    console.log("imageid "+imageId);
 
-exports.getImageData = (req, res, next) => {
-    const imageId = req.body.image_id;
-    Image.findById(imageId)
-    .then(imageData => {    
-        res
-        .status(200)
-        .json({message: 'Fetch images ok', imageData: imageData[0][0]});})
-    .catch(err => {
-        if(!err.statusCode){
-            err.statusCode = 500;
-        }
-        next(err);
-    });
+    if(imageId){
+        Image.findById(imageId)
+        .then(imageData => {    
+            res
+            .status(200)
+            .json({message: 'Fetch images ok', imageData: imageData[0][0]});})
+        .catch(err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+    }else{
+        Image
+        .fetchAll()
+        .then(images => {
+            res
+            .status(200)
+            .json({message: 'Fetch images ok', images: images[0]});
+        })
+        .catch(err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+    }
+    
 }
 
 exports.replaceImage = (req, res, next) => {
