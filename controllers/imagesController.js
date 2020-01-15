@@ -4,14 +4,19 @@ const Image = require('../models/imageModel');
 
 exports.getImage = (req, res, next) => {
     const imageId = req.params.imageId;
-    console.log("imageid "+imageId);
-
     if(imageId){
         Image.findById(imageId)
-        .then(imageData => {    
-            res
-            .status(200)
-            .json({message: 'Fetch images ok', imageData: imageData[0][0]});})
+        .then(imageData => {
+            if(!imageData[0] || imageData[0].length === 0){
+                res
+                .status(500)
+                .json({message: 'Image not found'}); 
+            }else{
+                res
+                .status(200)
+                .json({message: 'Fetch images ok', imageData: imageData[0][0]});                    
+            }
+        })
         .catch(err => {
             if(!err.statusCode){
                 err.statusCode = 500;
